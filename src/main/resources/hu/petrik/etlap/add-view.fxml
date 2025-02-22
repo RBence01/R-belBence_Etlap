@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.geometry.Insets?>
-<VBox spacing="20" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.petrik.etlap.AddEtelController">
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.petrik.etlap.AddEtelController">
    <children>
-      <TextField promptText="név" fx:id="nevInput" />
-      <TextField promptText="leiras" fx:id="leirasInput" />
-      <Spinner editable="true" promptText="ár" fx:id="arInput" />
-      <TextField promptText="kategória" fx:id="kategoriaInput" />
-      <Button mnemonicParsing="false" text="Hozzáad" onAction="#onAddButton"/>
+      <TextField fx:id="nevInput" promptText="név" />
+      <TextArea fx:id="leirasInput" prefHeight="59.0" prefWidth="560.0" promptText="leírás" />
+      <Spinner fx:id="arInput" editable="true" promptText="ár" />
+       <ChoiceBox fx:id="kategoriaInput" prefWidth="150.0">
+           <items>
+               <FXCollections fx:factory="observableArrayList">
+                   <String fx:value="előétel" />
+                   <String fx:value="főétel" />
+                   <String fx:value="desszert" />
+               </FXCollections>
+           </items>
+       </ChoiceBox>
+      <Button mnemonicParsing="false" onAction="#onAddButton" text="Hozzáad" />
    </children>
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

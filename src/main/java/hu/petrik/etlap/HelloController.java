@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class HelloController {
     @FXML public TableColumn<Etel, String> nameCol;
@@ -18,6 +19,8 @@ public class HelloController {
     @FXML public TableColumn<Etel, Integer> priceCol;
     @FXML public TableView<Etel> etlapTable;
     @FXML public Label leiras;
+    @FXML public Spinner<Integer> ftIncField;
+    @FXML public Spinner<Integer> perIncField;
 
     private EtelService service;
 
@@ -25,9 +28,12 @@ public class HelloController {
         nameCol.setCellValueFactory(new PropertyValueFactory<>("nev"));
         categoryCol.setCellValueFactory(new PropertyValueFactory<>("kategoria"));
         priceCol.setCellValueFactory(new PropertyValueFactory<>("ar"));
+        ftIncField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(50, 3000, 50, 50));
+        perIncField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 50, 5, 5));
 
         etlapTable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldEtel, newEtel) -> {
             if (newEtel != null) leiras.setText(newEtel.getLeiras());
+            else leiras.setText("");
         });
 
         try {
@@ -88,6 +94,11 @@ public class HelloController {
             return;
         }
         try {
+            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmation.setTitle("Törlés");
+            confirmation.setHeaderText("Biztosan törölni szeretné a kiválasztott ételt?");
+            confirmation.setContentText(selected.getNev());
+            if (confirmation.showAndWait().get() != ButtonType.OK) return;
             if (!service.delete(selected.getId())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Hiba!");
@@ -102,5 +113,69 @@ public class HelloController {
             alert.setContentText(e.getMessage());
         }
 
+    }
+
+    public void ftInc(ActionEvent actionEvent) {
+        Etel selected = etlapTable.getSelectionModel().getSelectedItem();
+        try {
+            if (selected == null) {
+                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation.setTitle("Áremelés");
+                confirmation.setHeaderText("Biztosan áremelést szeretne végrehajtani az összes ételen?");
+                confirmation.setContentText("Az áremelés mértéke: " + ftIncField.getValue() + " Ft");
+                if (confirmation.showAndWait().get() != ButtonType.OK) return;
+                List<Etel> list = etlapTable.getItems();
+                for (Etel etel : list) {
+                    etel.setAr(etel.getAr() + ftIncField.getValue());
+                }
+                service.changeList(list);
+            } else {
+                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation.setTitle("Áremelés");
+                confirmation.setHeaderText("Biztosan áremelést szeretne végrehajtani az ételen? (" + selected.getNev() + ")");
+                confirmation.setContentText("Az áremelés mértéke: " + ftIncField.getValue() + " Ft");
+                if (confirmation.showAndWait().get() != ButtonType.OK) return;
+                selected.setAr(selected.getAr() + ftIncField.getValue());
+                service.change(selected);
+            }
+            ListEtel();
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Hiba!");
+            alert.setHeaderText("Sikertelen áremelés.");
+            alert.setContentText(e.getMessage());
+        }
+    }
+
+    public void perInc(ActionEvent actionEvent) {
+        Etel selected = etlapTable.getSelectionModel().getSelectedItem();
+        try {
+            if (selected == null) {
+                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation.setTitle("Áremelés");
+                confirmation.setHeaderText("Biztosan áremelést szeretne végrehajtani az összes ételen?");
+                confirmation.setContentText("Az áremelés mértéke: " + perIncField.getValue() + "%");
+                if (confirmation.showAndWait().get() != ButtonType.OK) return;
+                List<Etel> list = etlapTable.getItems();
+                for (Etel etel : list) {
+                    etel.setAr((int)(etel.getAr() * (1 + ((float)perIncField.getValue() / 100))));
+                }
+                service.changeList(list);
+            } else {
+                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation.setTitle("Áremelés");
+                confirmation.setHeaderText("Biztosan áremelést szeretne végrehajtani az ételen? (" + selected.getNev() + ")");
+                confirmation.setContentText("Az áremelés mértéke: " + perIncField.getValue() + "%");
+                if (confirmation.showAndWait().get() != ButtonType.OK) return;
+                selected.setAr((int)(selected.getAr() * (1 + ((float)perIncField.getValue() / 100))));
+                service.change(selected);
+            }
+            ListEtel();
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Hiba!");
+            alert.setHeaderText("Sikertelen áremelés.");
+            alert.setContentText(e.getMessage());
+        }
     }
 }

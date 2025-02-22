@@ -4,10 +4,33 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.petrik.etlap.HelloController">
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.petrik.etlap.HelloController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
+   <TitledPane prefHeight="200.0" prefWidth="200.0" text="Ár emelés">
+      <content>
+         <GridPane>
+           <columnConstraints>
+             <ColumnConstraints hgrow="SOMETIMES" maxWidth="239.0" minWidth="10.0" prefWidth="160.0" />
+             <ColumnConstraints hgrow="SOMETIMES" maxWidth="258.0" minWidth="0.0" prefWidth="28.0" />
+             <ColumnConstraints hgrow="SOMETIMES" maxWidth="258.0" minWidth="10.0" prefWidth="220.0" />
+           </columnConstraints>
+           <rowConstraints>
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+            <children>
+               <Spinner fx:id="ftIncField" />
+               <Spinner fx:id="perIncField" GridPane.rowIndex="1" />
+               <Button mnemonicParsing="false" onAction="#ftInc" text="Emelés" GridPane.columnIndex="2" />
+               <Button mnemonicParsing="false" onAction="#perInc" text="Emelés" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+               <Label text="Ft" GridPane.columnIndex="1" />
+               <Label text="\%" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            </children>
+         </GridPane>
+      </content>
+   </TitledPane>
    <HBox prefHeight="10.0" prefWidth="200.0" spacing="20">
       <children>
          <Button mnemonicParsing="false" onAction="#addButton" text="Új étel felvétele" />

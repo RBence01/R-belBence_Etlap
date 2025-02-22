@@ -45,6 +45,14 @@ public class EtelService {
         return s.executeUpdate() == 1;
     }
 
+    public boolean changeList(List<Etel> list) throws SQLException {
+        boolean success = true;
+        for (Etel etel : list) {
+            if (!this.change(etel)) success = false;
+        }
+        return success;
+    }
+
     public boolean delete(int id) throws SQLException {
         PreparedStatement s = connection.prepareStatement("DELETE FROM etlap WHERE id = ?");
         s.setInt(1, id);
